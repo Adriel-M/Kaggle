@@ -1,3 +1,5 @@
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
@@ -5,7 +7,7 @@ import itertools
 
 # Taken from
 # https://github.com/UofTCoders/studyGroup/blob/gh-pages/lessons/python/scikit-learn/UofTCoders_ML.ipynb
-def plot_confusion_matrix(cm, classes, title):
+def plot_confusion_matrix(cm, classes, title, outpath):
     plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     plt.title(title)
     plt.colorbar()
@@ -18,4 +20,5 @@ def plot_confusion_matrix(cm, classes, title):
                  if cm[i, j] > thresh else 'black')
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
-    plt.show()
+    plt.savefig(outpath)
+    plt.close()

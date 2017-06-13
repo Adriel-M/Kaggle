@@ -19,8 +19,8 @@ Normal_X = Normal.filter(items=x_items)
 Normal_Y = Normal.Class
 
 # Create training and test sets
-train_fraud_X, test_fraud_X, train_fraud_Y, test_fraud_Y = train_test_split(
-    Fraud_X, Fraud_Y, test_size=0.4, random_state=0)
+train_fraud_X, test_fraud_X, train_fraud_Y, test_fraud_Y = \
+    train_test_split(Fraud_X, Fraud_Y, test_size=0.4, random_state=0)
 train_normal_X, test_normal_X, train_normal_Y, test_normal_Y = \
     train_test_split(Normal_X, Normal_Y, test_size=0.4, random_state=0)
 
@@ -52,4 +52,5 @@ print("Fraud Classification Accuracy: {}".format(test_fraud_score))
 test_confusion = confusion_matrix(test_Y, test_predicted_Y)
 test_classes = ["Regular", "Fraud"]
 test_title = "Confusion Matrix Test Set. Accuracy {}".format(test_score * 100)
-plot_confusion_matrix(test_confusion, test_classes, test_title)
+out_filename = "tpot_genetic.png"
+plot_confusion_matrix(test_confusion, test_classes, test_title, out_filename)
