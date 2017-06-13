@@ -12,7 +12,7 @@ x_items = ["V" + str(i) for i in range(1, 29)] + ["Amount", "Time"]
 # Split the data set
 data_set = pd.read_csv(CREDIT_CARD_FILE)
 Fraud = data_set[data_set.Class == 1]
-Normal = data_set[data_set.Class == 0]
+Normal = data_set[data_set.Class == 0].sample(frac=0.15)
 Fraud_X = Fraud.filter(items=x_items)
 Fraud_Y = Fraud.Class
 Normal_X = Normal.filter(items=x_items)
@@ -28,8 +28,8 @@ train_normal_X, test_normal_X, train_normal_Y, test_normal_Y = \
 temp_X = train_fraud_X.copy()
 temp_Y = train_fraud_Y.copy()
 for _ in range(200):
-   temp_X = pd.concat([temp_X, train_fraud_X])
-   temp_Y = pd.concat([temp_Y, train_fraud_Y])
+  temp_X = pd.concat([temp_X, train_fraud_X])
+  temp_Y = pd.concat([temp_Y, train_fraud_Y])
 
 train_X = pd.concat([temp_X, train_normal_X])
 train_Y = pd.concat([temp_Y, train_normal_Y])
