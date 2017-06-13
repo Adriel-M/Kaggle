@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn import linear_model
+from tpot import TPOTClassifier
 
 from utils import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
@@ -28,8 +28,8 @@ train_normal_X, test_normal_X, train_normal_Y, test_normal_Y = \
 temp_X = train_fraud_X.copy()
 temp_Y = train_fraud_Y.copy()
 for _ in range(200):
-    temp_X = pd.concat([temp_X, train_fraud_X])
-    temp_Y = pd.concat([temp_Y, train_fraud_Y])
+   temp_X = pd.concat([temp_X, train_fraud_X])
+   temp_Y = pd.concat([temp_Y, train_fraud_Y])
 
 train_X = pd.concat([temp_X, train_normal_X])
 train_Y = pd.concat([temp_Y, train_normal_Y])
@@ -37,14 +37,14 @@ test_X = pd.concat([test_fraud_X, test_normal_X])
 test_Y = pd.concat([test_fraud_Y, test_normal_Y])
 
 # Train
-lr = linear_model.LogisticRegression(solver="newton-cg", max_iter=1000, class_weight="balanced")
-lr.fit(train_X, train_Y)
+tp = TPOTClassifier(generations=5, population_size=10, verbosity=2)
+tp.fit(train_X, train_Y)
 
 # Performances
-test_predicted_Y = lr.predict(test_X)
-test_score = lr.score(test_X, test_Y)
-test_fraud_predicted_Y = lr.predict(test_fraud_X)
-test_fraud_score = lr.score(test_fraud_X, test_fraud_Y)
+test_predicted_Y = tp.predict(test_X)
+test_score = tp.score(test_X, test_Y)
+test_fraud_predicted_Y = tp.predict(test_fraud_X)
+test_fraud_score = tp.score(test_fraud_X, test_fraud_Y)
 
 print("Test Set Accuracy: {}".format(test_score))
 print("Fraud Classification Accuracy: {}".format(test_fraud_score))
@@ -53,4 +53,3 @@ test_confusion = confusion_matrix(test_Y, test_predicted_Y)
 test_classes = ["Regular", "Fraud"]
 test_title = "Confusion Matrix Test Set. Accuracy {}".format(test_score * 100)
 plot_confusion_matrix(test_confusion, test_classes, test_title)
-
